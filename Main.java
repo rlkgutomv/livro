@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    // Dependências
+    
     private static Biblioteca biblioteca = new Biblioteca();
     private static Scanner scan = new Scanner(System.in);
 
@@ -16,6 +16,8 @@ public class Main {
                 4 - Remover Livro
                 5 - Atualizar Livro
                 6 - Listar quantidade de livros
+                7 - Pesquisar por intervalo de anos
+                8 - Mostrar livro mais antigo e mais novo
                 0 - Sair
                 """;
         int opcao;
@@ -25,33 +27,40 @@ public class Main {
             switch (opcao) {
                 case 1:
                     cadastrarLivro();
-                    System.out.println("Pressione Enter para continuar");
-                    scan.nextLine();
+                    pausa();
                     break;
                 case 2:
                     listarAcervo();
-                    System.out.println("Pressione Enter para continuar");
-                    scan.nextLine();
+                    pausa();
                     break;
                 case 3:
                     pesquisarLivro();
-                    System.out.println("Pressione Enter para continuar");
-                    scan.nextLine();
+                    pausa();
                     break;
                 case 4:
                     removerLivro(biblioteca.pesquisar());
-                    System.out.println("Pressione Enter para continuar");
-                    scan.nextLine();
+                    pausa();
                     break;
                 case 5:
                     atualizarLivro(biblioteca.pesquisar());
-                    System.out.println("Pressione Enter para continuar");
-                    scan.nextLine();
+                    pausa();
                     break;
                 case 6:
                     listarQntLivros(biblioteca.pesquisar());
-                    System.out.println("Pressione Enter para continuar");
-                    scan.nextLine();
+                    pausa();
+                    break;
+                case 7:
+                    int anoInicio = Input.scanInt("Ano inicial: ", scan);
+                    int anoFim = Input.scanInt("Ano final: ", scan);
+                    biblioteca.pesquisarPorAno(anoInicio, anoFim);
+                    pausa();
+                    break;
+                case 8:
+                    Livro antigo = biblioteca.livroMaisAntigo();
+                    Livro novo = biblioteca.livroMaisNovo();
+                    System.out.println("Mais antigo: " + (antigo == null ? "N/A" : antigo));
+                    System.out.println("Mais novo: " + (novo == null ? "N/A" : novo));
+                    pausa();
                     break;
                 case 0:
                     System.out.println("Volte Sempre!!!");
@@ -64,32 +73,39 @@ public class Main {
     }
 
     private static void cadastrarLivro() {
+        System.out.println("Você deseja cadastrar um livro:");
+        System.out.println("1 - Físico");
+        System.out.println("2 - Digital");
+        int tipo = Input.scanInt("Escolha: ", scan);
+
         String titulo = Input.scanString("Digite o Título: ", scan).trim();
         String autor = Input.scanString("Digite o Autor: ", scan).trim();
         int anoPublicacao = Input.scanInt("Digite o ano de publicação: ", scan);
         int numeroPaginas = Input.scanInt("Digite o número de páginas: ", scan);
 
-        Livro novoLivro = new Livro(titulo, autor, anoPublicacao, numeroPaginas);
+        Livro novoLivro;
+        if (tipo == 1) {
+            novoLivro = new LivroFisico(titulo, autor, anoPublicacao, numeroPaginas);
+        } else {
+            novoLivro = new LivroDigital(titulo, autor, anoPublicacao, numeroPaginas);
+        }
 
         try {
-            biblioteca.adicionar(novoLivro);
+           biblioteca.adicionar(novoLivro); 
             System.out.println("Livro adicionado com sucesso.");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-
         }
     }
 
     private static void listarAcervo() {
         var acervo = biblioteca.pesquisar();
-        // List<Livro> acervo = biblioteca.pesquisar();
         imprimirLista(acervo);
     }
 
     private static void pesquisarLivro() {
         String titulo = Input.scanString("Digite o título que procuras: ", scan);
-        String pesquisaAutor = Input.scanString(
-                "Deseja pesquiar por autor? (S/N) ", scan);
+        String pesquisaAutor = Input.scanString("Deseja pesquisar por autor? (S/N) ", scan);
         List<Livro> livros;
         if (pesquisaAutor.toLowerCase().charAt(0) == 's') {
             String autor = Input.scanString("Digite o nome do autor: ", scan);
@@ -104,7 +120,7 @@ public class Main {
         if (acervo == null || acervo.isEmpty())
             System.out.println("Nenhum Livro Encontrado");
         else {
-            System.out.println("Livros Encrontrados");
+            System.out.println("Livros Encontrados:");
             for (int i = 0; i < acervo.size(); i++) {
                 System.out.println("Livro " + (i + 1) + ": " + acervo.get(i));
             }
@@ -118,7 +134,7 @@ public class Main {
         }
 
         listarAcervo();
-        int remover = Input.scanInt("Digite qual o indice do livro que deseja remover", scan) - 1;
+        int remover = Input.scanInt("Digite qual o índice do livro que deseja remover: ", scan) - 1;
 
         if (remover >= 0 && remover < acervo.size()) {
             Livro removido = acervo.remove(remover);
@@ -129,44 +145,43 @@ public class Main {
     }
 
     private static void atualizarLivro(List<Livro> acervo) {
-
         if (acervo.isEmpty()) {
-            System.out.println("A lista esta vazia!");
+            System.out.println("A lista está vazia!");
             return;
         }
 
-        System.out.println(acervo);
-        String nomeDoLivroNormal = Input.scanString("Digite o nome do livro que deseja atualizar", scan);
-        String nomeDoLivro = nomeDoLivroNormal.toLowerCase();
+        listarAcervo();
+        String nomeDoLivro = Input.scanString("Digite o nome do livro que deseja atualizar: ", scan).toLowerCase();
         boolean acharLivro = false;
 
         for (Livro t : acervo) {
             if (t.getTitulo().toLowerCase().equals(nomeDoLivro)) {
-                t.setTitulo(Input.scanString("Digite o novo titulo: ", scan));
+                t.setTitulo(Input.scanString("Digite o novo título: ", scan));
                 t.setAnoPublicacao(Input.scanInt("Digite o novo ano de publicação: ", scan));
-                t.setNumeroPaginas(Input.scanInt("Digite o novo numero de paginas: ", scan));
+                t.setNumeroPaginas(Input.scanInt("Digite o novo número de páginas: ", scan));
                 t.setAutor(Input.scanString("Digite o novo nome do autor: ", scan));
                 System.out.println("Livro atualizado com sucesso!");
                 acharLivro = true;
                 break;
             }
-
         }
         if (!acharLivro) {
-            System.out.println("Não existe livro com esse titulo!");
+            System.out.println("Não existe livro com esse título!");
         }
     }
 
     private static void listarQntLivros(List<Livro> acervo) {
-
         if (acervo.isEmpty()) {
-            System.out.println("A lista esta vazia!");
+            System.out.println("A lista está vazia!");
             return;
         }
 
         int quantidade = acervo.size();
+        System.out.println("O acervo tem: " + quantidade + " livros");
+    }
 
-        System.out.println("O acervo tem: " + quantidade + " Livros");
-
+    private static void pausa() {
+        System.out.println("Pressione Enter para continuar");
+        scan.nextLine();
     }
 }
