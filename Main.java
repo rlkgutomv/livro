@@ -14,6 +14,7 @@ public class Main {
                 2 - Listar Acervo
                 3 - Pesquisar Livro
                 4 - Remover Livro
+                5 - Atualizar Livro
                 0 - Sair
                 """;
         int opcao;
@@ -38,6 +39,11 @@ public class Main {
                     break;
                 case 4:
                     removerLivro(biblioteca.pesquisar());
+                    System.out.println("Pressione Enter para continuar");
+                    scan.nextLine();
+                    break;
+                case 5:
+                    atualizarLivro(biblioteca.pesquisar());
                     System.out.println("Pressione Enter para continuar");
                     scan.nextLine();
                     break;
@@ -114,4 +120,36 @@ public class Main {
         }
     }
 
-}
+    private static void atualizarLivro(List <Livro> acervo){
+
+        if(acervo.isEmpty()){
+            System.out.println("A lista esta vazia!");
+            return;
+        }
+
+        System.out.println(acervo);
+        String nomeDoLivroNormal = Input.scanString("Digite o nome do livro que deseja atualizar", scan);
+        String nomeDoLivro = nomeDoLivroNormal.toLowerCase();
+        boolean acharLivro = false;
+        
+        for (Livro t : acervo){
+            if (t.getTitulo().toLowerCase().equals(nomeDoLivro)){
+                t.setTitulo(Input.scanString("Digite o novo titulo: ", scan));
+                t.setAnoPublicacao(Input.scanInt("Digite o novo ano de publicação: ", scan));
+                t.setNumeroPaginas(Input.scanInt("Digite o novo numero de paginas: ", scan));
+                t.setAutor(Input.scanString("Digite o novo nome do autor: ", scan));
+                System.out.println("Livro atualizado com sucesso!");
+                acharLivro = true;
+                break;
+            }
+            
+            }
+            if(!acharLivro){
+                System.out.println("Não existe livro com esse titulo!");
+            }
+        }
+        
+        
+
+
+    }
