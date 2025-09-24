@@ -51,8 +51,34 @@ public class Biblioteca {
         }
         return livrosEncontrados;
     }
-
+    public void excecao(Livro livro) throws Exception {
+    if (livro == null) {
+        throw new IllegalArgumentException("Livro nulo");
     }
+
+    
+    String tituloNovo = livro.getTitulo().trim().toLowerCase();
+    String autorNovo = livro.getAutor().trim().toLowerCase();
+    int anoNovo = livro.getAnoPublicacao();
+
+    
+    for (Livro l : acervo) {
+        String tituloExistente = l.getTitulo().trim().toLowerCase();
+        String autorExistente = l.getAutor().trim().toLowerCase();
+        int anoExistente = l.getAnoPublicacao();
+
+        if (tituloExistente.equals(tituloNovo)
+            && autorExistente.equals(autorNovo)
+            && anoExistente == anoNovo) {
+            throw new Exception("Já existe um livro com este título, autor e ano no acervo.");
+        }
+    }
+
+
+    acervo.add(livro);
+}
+    }
+    
 
 
 

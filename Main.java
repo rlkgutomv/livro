@@ -64,16 +64,19 @@ public class Main {
     }
 
     private static void cadastrarLivro() {
-        String titulo = Input.scanString("Digite o Título: ", scan);
-        String autor = Input.scanString("Digite o Autor: ", scan);
+        String titulo = Input.scanString("Digite o Título: ", scan).trim();
+        String autor = Input.scanString("Digite o Autor: ", scan).trim();
         int anoPublicacao = Input.scanInt("Digite o ano de publicação: ", scan);
         int numeroPaginas = Input.scanInt("Digite o número de páginas: ", scan);
+
         Livro novoLivro = new Livro(titulo, autor, anoPublicacao, numeroPaginas);
+
         try {
             biblioteca.adicionar(novoLivro);
             System.out.println("Livro adicionado com sucesso.");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
+
         }
     }
 
@@ -86,9 +89,9 @@ public class Main {
     private static void pesquisarLivro() {
         String titulo = Input.scanString("Digite o título que procuras: ", scan);
         String pesquisaAutor = Input.scanString(
-            "Deseja pesquiar por autor? (S/N) ", scan);
+                "Deseja pesquiar por autor? (S/N) ", scan);
         List<Livro> livros;
-        if (pesquisaAutor.toLowerCase().charAt(0) == 's'){
+        if (pesquisaAutor.toLowerCase().charAt(0) == 's') {
             String autor = Input.scanString("Digite o nome do autor: ", scan);
             livros = biblioteca.pesquisar(titulo, autor);
         } else {
@@ -108,8 +111,8 @@ public class Main {
         }
     }
 
-    private static void removerLivro(List <Livro> acervo){
-        if(acervo.isEmpty()){
+    private static void removerLivro(List<Livro> acervo) {
+        if (acervo.isEmpty()) {
             System.out.println("Nenhum Livro Encontrado");
             return;
         }
@@ -117,18 +120,17 @@ public class Main {
         listarAcervo();
         int remover = Input.scanInt("Digite qual o indice do livro que deseja remover", scan) - 1;
 
-        if(remover >= 0 && remover < acervo.size()){
-        Livro removido = acervo.remove(remover);
-        System.out.println("Removido: " + removido);
-        }
-        else{
+        if (remover >= 0 && remover < acervo.size()) {
+            Livro removido = acervo.remove(remover);
+            System.out.println("Removido: " + removido);
+        } else {
             System.out.println("Índice inválido.");
         }
     }
 
-    private static void atualizarLivro(List <Livro> acervo){
+    private static void atualizarLivro(List<Livro> acervo) {
 
-        if(acervo.isEmpty()){
+        if (acervo.isEmpty()) {
             System.out.println("A lista esta vazia!");
             return;
         }
@@ -137,9 +139,9 @@ public class Main {
         String nomeDoLivroNormal = Input.scanString("Digite o nome do livro que deseja atualizar", scan);
         String nomeDoLivro = nomeDoLivroNormal.toLowerCase();
         boolean acharLivro = false;
-        
-        for (Livro t : acervo){
-            if (t.getTitulo().toLowerCase().equals(nomeDoLivro)){
+
+        for (Livro t : acervo) {
+            if (t.getTitulo().toLowerCase().equals(nomeDoLivro)) {
                 t.setTitulo(Input.scanString("Digite o novo titulo: ", scan));
                 t.setAnoPublicacao(Input.scanInt("Digite o novo ano de publicação: ", scan));
                 t.setNumeroPaginas(Input.scanInt("Digite o novo numero de paginas: ", scan));
@@ -148,23 +150,23 @@ public class Main {
                 acharLivro = true;
                 break;
             }
-            
-            }
-            if(!acharLivro){
-                System.out.println("Não existe livro com esse titulo!");
-            }
+
         }
-
-        private static void listarQntLivros(List<Livro> acervo){
-
-            
-            if(acervo.isEmpty()){
-            System.out.println("A lista esta vazia!");
-            return;}
-            
-            int quantidade = acervo.size();
-            
-            System.out.println("O acervo tem: " + quantidade + " Livros");
-
+        if (!acharLivro) {
+            System.out.println("Não existe livro com esse titulo!");
         }
     }
+
+    private static void listarQntLivros(List<Livro> acervo) {
+
+        if (acervo.isEmpty()) {
+            System.out.println("A lista esta vazia!");
+            return;
+        }
+
+        int quantidade = acervo.size();
+
+        System.out.println("O acervo tem: " + quantidade + " Livros");
+
+    }
+}
