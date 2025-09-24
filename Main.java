@@ -15,6 +15,7 @@ public class Main {
                 3 - Pesquisar Livro
                 4 - Remover Livro
                 5 - Atualizar Livro
+                6 - Listar quantidade de livros
                 0 - Sair
                 """;
         int opcao;
@@ -44,6 +45,11 @@ public class Main {
                     break;
                 case 5:
                     atualizarLivro(biblioteca.pesquisar());
+                    System.out.println("Pressione Enter para continuar");
+                    scan.nextLine();
+                    break;
+                case 6:
+                    listarQntLivros(biblioteca.pesquisar());
                     System.out.println("Pressione Enter para continuar");
                     scan.nextLine();
                     break;
@@ -148,8 +154,17 @@ public class Main {
                 System.out.println("Não existe livro com esse titulo!");
             }
         }
-        
-        
 
+        private static void listarQntLivros(List<Livro> acervo){
 
+            
+            if(acervo.isEmpty()){
+            System.out.println("A lista esta vazia!");
+            return;}
+            
+            int quantidade = acervo.size();
+            
+            System.out.println("O acervo tem: " + quantidade + " Livros");
+
+        }
     }
