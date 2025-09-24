@@ -73,8 +73,12 @@ public class Biblioteca {
         for (Livro livro : acervo) {
             if (livro.getAnoPublicacao() >= anoInicio && livro.getAnoPublicacao() <= anoFim) {
                 encontrados.add(livro);
+                System.out.println(livro);
             }
         }
+        if(encontrados.isEmpty()){
+                System.out.println("Nenhum livro encontrado nesse intervalo de anos.");
+            }
         return encontrados;
     }
 
@@ -125,9 +129,7 @@ public class Biblioteca {
     }
 
     
-    public int contarLivros() {
-        return acervo.size();
-    }
+   
 
    
     public Livro livroMaisAntigo() {
@@ -136,6 +138,7 @@ public class Biblioteca {
         for (Livro livro : acervo) {
             if (livro.getAnoPublicacao() < antigo.getAnoPublicacao()) {
                 antigo = livro;
+                System.out.println(antigo.getTitulo());
             }
         }
         return antigo;
@@ -148,6 +151,7 @@ public class Biblioteca {
         for (Livro livro : acervo) {
             if (livro.getAnoPublicacao() > novo.getAnoPublicacao()) {
                 novo = livro;
+                System.out.println(novo.getTitulo());
             }
         }
         return novo;
